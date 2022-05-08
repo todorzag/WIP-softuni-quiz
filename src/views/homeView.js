@@ -1,7 +1,7 @@
 import { html } from "../../node_modules/lit-html/lit-html.js";
 import * as quizService from "../services/quizzes.js";
 
-const homeTemplate = (allQuizzes, topics) => html`<section id="welcome">
+const homeTemplate = (allQuizzes, topics, isUser) => html`<section id="welcome">
   <div class="hero layout">
     <div class="splash right-col"><i class="fas fa-clipboard-list"></i></div>
     <div class="glass welcome">
@@ -10,7 +10,11 @@ const homeTemplate = (allQuizzes, topics) => html`<section id="welcome">
         Home to ${allQuizzes.length} quizes in ${topics} topics.
         <a href="/browse">Browse all quizes</a>.
       </p>
-      <a class="action cta" href="/login">Sign in to create a quiz</a>
+      ${isUser
+        ? html`<a class="action cta" href="/create"> Create a Quiz! </a>`
+        : html`<a class="action cta" href="/login">
+            Sign in to create a Quiz!
+          </a>`}
     </div>
   </div>
 
@@ -35,7 +39,7 @@ const quizTemplate = (quiz) => html`<article class="preview layout">
     <div class="quiz-meta">
       <span>${quiz.get("questionNumber")} questions</span>
       <span>|</span>
-      <span>Taken 54 times</span>
+      <span>Taken ${quiz.get("timesTaken")} times</span>
     </div>
   </div>
 </article>`;
@@ -43,7 +47,7 @@ const quizTemplate = (quiz) => html`<article class="preview layout">
 export const homeView = (ctx) => {
   Promise.all([quizService.getAll(), quizService.getTopics()]).then(
     (values) => {
-      ctx.render(homeTemplate(values[0], values[1].length));
+      ctx.render(homeTemplate(values[0], values[1].length, ctx.user));
     }
   );
 };

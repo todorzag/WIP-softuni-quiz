@@ -1,11 +1,7 @@
 import { html, nothing } from "../../node_modules/lit-html/lit-html.js";
 import * as quizService from "../services/quizzes.js";
 
-import {
-  isCheckedAnswer,
-  isCheckedNav,
-  quizTracker,
-} from "../services/quizManager.js";
+import * as quizManager from "../services/quizManager.js";
 
 const quizNavTemplate = (quiz, questionNum, questions) => html`<header
     class="pad-large"
@@ -19,7 +15,7 @@ const quizNavTemplate = (quiz, questionNum, questions) => html`<header
       ${questionNav(quiz, quiz.get("questionNumber"), questionNum)}
     </nav>
   </header>
-  ${quizTemplate(quiz, questionNum, questions, quizTracker)} `;
+  ${quizTemplate(quiz, questionNum, questions, quizManager.quizTracker)} `;
 
 const quizTemplate = (quiz, questionNum, questions, quizTracker) => html`<div
   class="pad-large alt-page"
@@ -36,7 +32,9 @@ const quizTemplate = (quiz, questionNum, questions, quizTracker) => html`<div
       <a class="action" href="/quiz/${quiz.id}/${Number(questionNum) - 1}"
         ><i class="fas fa-arrow-left"></i> Previous</a
       >
-      <a class="action" href="#"><i class="fas fa-sync-alt"></i> Start over</a>
+      <a class="action" href="/quiz/${quiz.id}/1"
+        ><i class="fas fa-sync-alt"></i> Start over</a
+      >
       <div class="right-col">
         ${Number(questionNum) !== quiz.get("questionNumber")
           ? html`<a
@@ -60,7 +58,7 @@ const questionNav = (quiz, numQuestions, questionNum) => {
       html`<a
         class="q-index ${Number(questionNum) === i
           ? "q-current"
-          : ""} ${isCheckedNav(i) ? "q-answered" : ""}"
+          : ""} ${quizManager.isCheckedNav(i) ? "q-answered" : ""}"
         href="/quiz/${quiz.id}/${i}"
       ></a>`
     );
@@ -80,7 +78,7 @@ const answersTemplate = (answers, questionNum) => {
           type="radio"
           name=${`question-${questionNum}`}
           value=${i}
-          .checked=${isCheckedAnswer(i, questionNum)}
+          .checked=${quizManager.isCheckedAnswer(i, questionNum)}
         />
         <i class="fas fa-check-circle"></i>
         ${answers[i - 1]}
