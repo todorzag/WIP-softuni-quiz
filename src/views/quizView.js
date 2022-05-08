@@ -91,9 +91,16 @@ const answersTemplate = (answers, questionNum) => {
   return squareTemplates;
 };
 
-export const quizView = async (ctx) => {
-  let quiz = await quizService.getQuiz(ctx.params.quizId);
-  let questions = await quizService.getQuizQuestions(quiz);
-
-  ctx.render(quizNavTemplate(quiz, ctx.params.questionNumber, questions));
+export const quizView = (ctx) => {
+  quizService
+    .getQuiz(ctx.params.quizId)
+    .then((quiz) =>
+      quizService
+        .getQuizQuestions(quiz)
+        .then((questions) =>
+          ctx.render(
+            quizNavTemplate(quiz, ctx.params.questionNumber, questions)
+          )
+        )
+    );
 };

@@ -1,4 +1,5 @@
 import { html, nothing } from "../../node_modules/lit-html/lit-html.js";
+import { clearSolution } from "../services/quizManager.js";
 import * as quizService from "../services/quizzes.js";
 
 const detailsTemplate = (quiz, user, isUser) => html`<section id="details">
@@ -28,6 +29,7 @@ const detailsTemplate = (quiz, user, isUser) => html`<section id="details">
 </section>`;
 
 export const detailsView = (ctx) => {
+  clearSolution();
   quizService.getQuiz(ctx.params.quizId).then((quiz) =>
     quiz
       .get("ownerId")
