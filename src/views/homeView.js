@@ -20,9 +20,7 @@ const homeTemplate = (allQuizzes, topics, isUser) => html`<section id="welcome">
 
   <div class="pad-large alt-page">
     <h2>Our most recent quiz:</h2>
-
     ${allQuizzes.map((quiz) => quizTemplate(quiz))}
-
     <div>
       <a class="action cta" href="/browse">Browse all quizes</a>
     </div>
